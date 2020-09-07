@@ -49,7 +49,8 @@ public class WebtoonListDAO {
 		String sql = 
 			" SELECT "
 		  +	"	A.w_no, A.w_title, concat(LEFT(A.w_story, 150), '...') as w_story, A.w_thumbnail, A.w_link, A.plat_no, "
-		  + "	B.genre_no, C.genre_name, CONCAT(LEFT(D.w_writer, 60), '...') as w_writer "
+		  + "	B.genre_no, C.genre_name, CONCAT(LEFT(D.w_writer, 60), '...') as w_writer, "
+		  + "   E.plat_name "
 		  +	" FROM t_webtoon A "
 		  + " LEFT JOIN t_w_genre B "
 		  + " ON A.w_no = B.w_no "
@@ -67,7 +68,9 @@ public class WebtoonListDAO {
 		  + " INNER JOIN " 
 		  + "	(select w_no, group_concat(distinct w_writer separator ', ') as w_writer from t_w_writer group by w_no) D "
 		  + " ON A.w_no = D.w_no "
-		  + " where A.w_title LIKE ? or C.genre_name LIKE ? or D.w_writer LIKE ? "
+		  + " INNER JOIN t_platform E "
+		  + " ON  A.plat_no = E.plat_no "
+		  + " where A.w_title LIKE ? or C.genre_name LIKE ? or D.w_writer LIKE ? or E.plat_name LIKE ? "
 		  + " order BY RAND() limit ? ";
 
 		JdbcTemplate.executeQuery(sql, new JdbcSelectInterface() {
@@ -76,7 +79,8 @@ public class WebtoonListDAO {
 				ps.setNString(1, "%"+vo.getSearchKeyword()+"%");
 				ps.setNString(2, "%"+vo.getSearchKeyword()+"%");
 				ps.setNString(3, "%"+vo.getSearchKeyword()+"%");
-				ps.setInt(4, randomLength);
+				ps.setNString(4, "%"+vo.getSearchKeyword()+"%");
+				ps.setInt(5, randomLength);
 			}
 			
 			@Override

@@ -10,6 +10,34 @@ import com.allWebtoon.db.JdbcUpdateInterface;
 import com.allWebtoon.vo.UserVO;
 
 public class UserDAO {
+	public static UserVO selUser(int i_user) {
+		String sql = " SELECT A.u_no, A.u_id, A.u_profile, A.u_email, A.u_name, "
+					+ " A.u_birth, A.gender_no "
+					+ " FROM t_user A "
+					+ " WHERE A.u_no = ? ";
+		
+		UserVO sqlResult = new UserVO();
+		
+		JdbcTemplate.executeQuery(sql, new JdbcSelectInterface() {
+			@Override
+			public void prepared(PreparedStatement ps) throws SQLException {
+				ps.setInt(1, i_user);
+			}
+			@Override
+			public int executeQuery(ResultSet rs) throws SQLException {
+				if(rs.next()) {
+					sqlResult.setU_no(rs.getInt("u_no"));
+					sqlResult.setUser_id(rs.getNString("u_id"));
+					sqlResult.setProfile(rs.getNString("u_profile"));
+					sqlResult.setEmail(rs.getNString("u_email"));
+					sqlResult.setName(rs.getNString("u_name"));
+					sqlResult.setGender(rs.getInt("gender_no") == 1 ? "여성" : "남성");
+				}
+				return 1;
+			}
+		});
+		return sqlResult;
+	}
 	
 	public static int insUser(UserVO param) {
 		
@@ -39,22 +67,48 @@ public class UserDAO {
 
 		});
 	}
-	public static int selKakaoUser(UserVO param) {		
+	public static int selKakaoUser(UserVO param) {
 		String sql = "SELECT u_no, u_password, u_name FROM t_user WHERE u_id=? ";
 		
 		return JdbcTemplate.executeQuery(sql, new JdbcSelectInterface() {
-
 			@Override
 			public void prepared(PreparedStatement ps) throws SQLException {
 				ps.setNString(1,  param.getUser_id());
 			}
-
 			@Override
 			public int executeQuery(ResultSet rs) throws SQLException {
-				
 				if(rs.next()) {					//레코드가 있음
 					String dbPw = rs.getNString("u_password");
-					
+					if(dbPw.equals(param.getUser_password())) {	//로그인 성공(비밀번호 맞을 경우)
+						int i_user = rs.getInt("u_no");
+						String nm = rs.getNString("u_name");
+						param.setUser_password(null);
+						param.setU_no(i_user);
+						param.setName(nm);
+						return 1;
+					} else {								//로그인 실패.(비밀번호 틀릴 경우)
+						return 2;
+					}
+				}else {			
+					System.out.println("아이디 없음");//레코드가 없음. (아이디 없음)
+					return 0;						
+				}
+				
+			}	
+		});
+	}	
+	public static int selNaverUser(UserVO param) {
+		String sql = "SELECT u_no, u_password, u_name FROM t_user WHERE u_id=? ";
+		
+		return JdbcTemplate.executeQuery(sql, new JdbcSelectInterface() {
+			@Override
+			public void prepared(PreparedStatement ps) throws SQLException {
+				ps.setNString(1,  param.getUser_id());
+			}
+			@Override
+			public int executeQuery(ResultSet rs) throws SQLException {
+				if(rs.next()) {					//레코드가 있음
+					String dbPw = rs.getNString("u_password");
 					if(dbPw.equals(param.getUser_password())) {	//로그인 성공(비밀번호 맞을 경우)
 						int i_user = rs.getInt("u_no");
 						String nm = rs.getNString("u_name");
@@ -66,7 +120,7 @@ public class UserDAO {
 						return 2;
 					}
 				}else {							//레코드가 없음. (아이디 없음)
-					return insUser(param);					
+					return 0;						
 				}
 				
 			}	

@@ -21,17 +21,14 @@
         #user_id, #user_pw {
             width: 300px; height: 30px; padding: 10px; margin: 10px;
         }
-        #login_btn, #google {
+        #login_btn{
             width: 320px; padding: 10px; margin: 10px; border: none;
             color: white; font-size: 1.1em;
         }
-        #naver{width: 204px; height: 40px;}
-        .fb{width: 300px; height: 45px;}
+        .snsimg{width: 360px; height: 60px;}
+        .snsimg:hover{cursor: pointer;}
         #login_btn {background-color: #ccb2e5;}
-        #google {background-color: #ccc;}
-        a {
-            text-decoration: none; color: white; 
-        }
+        a {text-decoration: none; color: white;}
     </style>
 </head>
 <body>
@@ -45,9 +42,9 @@
                 <input type="password" id="user_pw" name="user_pw" placeholder="비밀번호"><br>
                 <input id="login_btn" type="submit" value="로그인">
             </form>
-            <div><img src="/images/login_logo/kakao_login_medium_wide.png" id="kakao" onclick="goKakao()"></div>
-            <div><img src="/images/login_logo/naver_login_green_wide.PNG" id="naver" onclick="goNaver('${state}')"></div>
-            <div class="google"><button id="google" onclick="goGoogle()">구글로 들어가기</button></div>
+            <div class="snsbtn"><img class="snsimg" src="/images/login_logo/kakao_btn.PNG" id="kakao" onclick="goKakao()"></div>
+            <div class="snsbtn"><img class="snsimg" src="/images/login_logo/naver_btn.PNG" id="naver" onclick="goNaver('${state}')"></div>
+            <div class="snsbtn"><img class="snsimg" src="/images/login_logo/google_btn.PNG" id="google" onclick="goGoogle()"></div>
         </div>
     </div>
 		

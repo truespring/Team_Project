@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.allWebtoon.api.GoogleAPI2;
 import com.allWebtoon.api.KakaoAPI;
 import com.allWebtoon.dao.UserDAO;
 import com.allWebtoon.util.Const;
@@ -38,24 +37,19 @@ public class LoginSer extends HttpServlet {
 			String access_token = KakaoAPI.getAccessToken(request.getParameter("code"));
 			UserVO userInfo = KakaoAPI.getUserInfo(access_token);
 			int result = UserDAO.selKakaoUser(userInfo);
-			if(result != 1) {		//에러처리
-				String msg = null;
-				switch(result) {
-					case 0:
-					msg = "에러가 발생했습니다";
-					break;
-					case 2:
-					msg = "비밀번호가 틀렸습니다.";
-					break;
-					case 3:
-					msg = "아이디가 없음";
-					break;
-				}
-				request.setAttribute("msg",msg);
-				request.setAttribute("user_id", userInfo.getName());
-				doGet(request,response);
+			if(result == 0) {
+				UserDAO.insUser(userInfo);
+				response.sendRedirect("/choGenre?user_id="+userInfo.getUser_id());
 				return;
 			}
+			
+			System.out.println("result : "+result);
+			//에러처리
+			if(result == 2) {		
+				String msg = "비밀번호가 틀렸습니다.";
+				request.setAttribute("msg",msg);
+			}
+			request.setAttribute("user_id", userInfo.getName());
 			HttpSession hs = request.getSession();
 			hs.setAttribute(Const.LOGIN_USER,userInfo);
 			

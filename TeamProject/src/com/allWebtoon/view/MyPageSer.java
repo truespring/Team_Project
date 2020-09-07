@@ -9,13 +9,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.allWebtoon.util.ViewResolver;
 
-/**
- * Servlet implementation class MyPageSer
- */
 @WebServlet("/myPage")
 public class MyPageSer extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		
 		ViewResolver.accessForward("myPage", request, response);
 	}
 
