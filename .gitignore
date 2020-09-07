@@ -1,21 +1,5 @@
-# Directories #
-/build/
-/bin/
-target/
-.idea
-classes/
-META-INF/
-  
 # OS Files #
 .DS_Store
-  
-*.class
-  
-# Package Files #
-*.jar
-*.war
-*.ear
-*.db
   
 ######################
 # Windows
@@ -56,10 +40,7 @@ tmp/**/*
 *.bak
 *.swp
 *~.nib
-.classpath
 .settings/
-.loadpath
-/src/main/resources/rebel.xml
 # External tool builders
 .externalToolBuilders/
   
