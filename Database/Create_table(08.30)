@@ -44,7 +44,7 @@ create table t_user (
   u_name varchar(30) not null,
   u_birth date not null,
   gender_no int not null,
-  u_email varchar(100) not null unique,
+  u_email varchar(100) not null,
   u_profile varchar(1000),
   foreign key (gender_no) references t_gender(gender_no) on delete cascade
 );
